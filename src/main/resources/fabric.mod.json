@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "packrule-menus",
+	"version": "${version}",
+	"name": "Pack/Rule Menus",
+	"description": "Makes the Datapack and Gamerule menus accesssible from singleplayer worlds.",
+	"authors": [
+		"Estecka"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/packrule-menus",
+		"sources": "https://github.com/Estecka/mc-PackRule-Menus"
+	},
+	"license": "GNU AGPLv3",
+	"icon": "assets/packrule-menus/icon.png",
+	"environment": "*",
+	"entrypoints": {
+	},
+	"mixins": [
+		"packrule-menus.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.24",
+		"minecraft": ">=1.19.4",
+		"java": ">=17"
+	},
+	"suggests": {
+	}
+}

@@ -42,7 +42,9 @@ extends Screen
 		final MinecraftServer server = this.client.getServer();
 		final World world;
 
-		if (client.isIntegratedServerRunning() && null != (world=client.getServer().getOverworld()))
+		if (client.isIntegratedServerRunning() 
+		&& server.getSaveProperties().areCommandsAllowed()
+		&& null != (world=client.getServer().getOverworld()))
 		{
 			adder.add(createButton(
 				Text.translatable("selectWorld.gameRules"),

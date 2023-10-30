@@ -21,11 +21,12 @@ import net.minecraft.resource.DataConfiguration;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.resource.featuretoggle.FeatureSet;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
-import net.minecraft.world.World;
+import net.minecraft.world.GameRules;
 import tk.estecka.packrulemenus.GenericWarningScreen;
 import tk.estecka.packrulemenus.PackRuleMenus;
 
@@ -37,18 +38,23 @@ extends Screen
 
 	@Shadow abstract ButtonWidget	createButton(Text message, Supplier<Screen> screenSupplier);
 
+	@Unique
+	private IntegratedServer server;
+
 	@Inject( method="init", at=@At(value="INVOKE", ordinal=1, shift=Shift.AFTER, target="net/minecraft/client/gui/widget/GridWidget$Adder.add (Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;") )
 	private void gameruleMenu$Init(CallbackInfo info, @Local GridWidget.Adder adder){
-		final MinecraftServer server = this.client.getServer();
-		final World world;
+		this.server = this.client.getServer();
 
-		if (client.isIntegratedServerRunning() && null != (world=client.getServer().getOverworld()))
+		if (client.isIntegratedServerRunning() 
+		&& server.getSaveProperties().areCommandsAllowed()
+		&& server.getOverworld() != null)
 		{
+			final GameRules worldRules = server.getOverworld().getGameRules();
 			adder.add(createButton(
 				Text.translatable("selectWorld.gameRules"),
 				() -> new EditGameRulesScreen(
-					world.getGameRules(),
-					optRules -> RevertScreen()
+					worldRules.copy(),
+					optRules -> { RevertScreen(); optRules.ifPresent(r -> worldRules.setAllValues(r, server)); }
 				)
 			));
 
@@ -72,19 +78,18 @@ extends Screen
 
 	@Unique
 	private void	HandleDatapackRefresh(final ResourcePackManager manager, Collection<String> rollback){
-		final MinecraftServer server = this.client.getServer();
 		FeatureSet neoFeatures = manager.getRequestedFeatures();
 		FeatureSet oldFeatures = server.getSaveProperties().getEnabledFeatures();
 
 		if (neoFeatures.equals(oldFeatures))
-			ReloadPacks(manager, server);
+			ReloadPacks(manager);
 		else {
 			boolean isExperimental = FeatureFlags.isNotVanilla(neoFeatures);
 			boolean wasVanillaRemoved = oldFeatures.contains(FeatureFlags.VANILLA) && !neoFeatures.contains(FeatureFlags.VANILLA);
 			BooleanConsumer onConfirm = confirmed -> {
 				if (confirmed){
-					this.ApplyFlags(manager, server);
-					this.ReloadPacks(manager, server);
+					this.ApplyFlags(manager);
+					this.ReloadPacks(manager);
 				} else {
 					manager.setEnabledProfiles(rollback);
 				}
@@ -101,7 +106,7 @@ extends Screen
 	}
 
 	@Unique
-	private void	ApplyFlags(final ResourcePackManager manager, final MinecraftServer server){
+	private void	ApplyFlags(final ResourcePackManager manager){
 		FeatureSet features = manager.getRequestedFeatures();
 
 		String featureNames = "";
@@ -114,14 +119,12 @@ extends Screen
 
 
 	@Unique
-	private void	ReloadPacks(final ResourcePackManager manager, final MinecraftServer server){
-		if (client.player != null)
-			client.inGameHud.getChatHud().addMessage(Text.translatable("commands.reload.success"));
+	private void	ReloadPacks(final ResourcePackManager manager){
+		client.inGameHud.getChatHud().addMessage(Text.translatable("commands.reload.success"));
 
 		server.reloadResources(manager.getEnabledNames()).exceptionally(e -> {
 			PackRuleMenus.LOGGER.error("{}", e);
-			if (client.player != null)
-				client.player.getCommandSource().sendError(Text.translatable("commands.reload.failure"));
+			client.inGameHud.getChatHud().addMessage(Text.translatable("commands.reload.failure").formatted(Formatting.RED));
 			return null;
 		});
 	}

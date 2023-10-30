@@ -1,6 +1,6 @@
 # Data-Pack / Game-Rule Menus
 
-Makes the eponymous menus accessible from already from singleplayer worlds.
+Makes the eponymous menus accessible from the pause menu in singleplayer worlds.
 
 ## Word of caution: Datapacks
 
@@ -8,7 +8,7 @@ Some built-in datapacks are not "just" datapacks, and require special handling. 
 
 ### Feature Packs
 
-When packs that include experimental features (such as bundles) are toggled, and the approriate feature flag will be toggled on the world.
+When packs that include experimental features (such as bundles) are toggled, the approriate feature flag will be toggled on the world.
 
 However, **unlike regular datapacks those will not take effect until you restart the world.** If you had to go through a warning screen in order to toggle something, you'll probably want to restart the world immediately.
 

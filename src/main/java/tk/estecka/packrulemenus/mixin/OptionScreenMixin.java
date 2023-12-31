@@ -93,6 +93,7 @@ extends Screen
 			BooleanConsumer onConfirm = confirmed -> {
 				if (confirmed){
 					this.ApplyFlags(manager);
+					this.server.stop(false);
 					if (this.client.world != null)
 						this.client.world.disconnect();
 					this.client.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));

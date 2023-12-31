@@ -20,10 +20,10 @@
 		"packrule-menus.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.14.24",
-		"minecraft": ">=1.19.4",
+		"fabricloader": ">=0.15.3",
 		"java": ">=17"
 	},
 	"suggests": {
+		"minecraft": "^1.19.4"
 	}
 }

@@ -11,7 +11,9 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.llamalad7.mixinextras.sugar.Local;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.screen.pack.PackScreen;
 import net.minecraft.client.gui.screen.world.EditGameRulesScreen;
@@ -63,7 +65,7 @@ extends Screen
 				Text.translatable("selectWorld.dataPacks"),
 				() -> new PackScreen(
 					server.getDataPackManager(),
-					manager -> { RevertScreen(); HandleDatapackRefresh(manager, rollback); },
+					manager -> { HandleDatapackRefresh(manager, rollback); },
 					server.getSavePath(WorldSavePath.DATAPACKS),
 					Text.translatable("dataPack.title")
 				)
@@ -81,19 +83,24 @@ extends Screen
 		FeatureSet neoFeatures = manager.getRequestedFeatures();
 		FeatureSet oldFeatures = server.getSaveProperties().getEnabledFeatures();
 
-		if (neoFeatures.equals(oldFeatures))
+		if (neoFeatures.equals(oldFeatures)) {
 			ReloadPacks(manager);
+			RevertScreen();
+		}
 		else {
 			boolean isExperimental = FeatureFlags.isNotVanilla(neoFeatures);
 			boolean wasVanillaRemoved = oldFeatures.contains(FeatureFlags.VANILLA) && !neoFeatures.contains(FeatureFlags.VANILLA);
 			BooleanConsumer onConfirm = confirmed -> {
 				if (confirmed){
 					this.ApplyFlags(manager);
-					this.ReloadPacks(manager);
+					if (this.client.world != null)
+						this.client.world.disconnect();
+					this.client.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+					this.client.setScreen(new TitleScreen());
 				} else {
 					manager.setEnabledProfiles(rollback);
+					RevertScreen();
 				}
-				RevertScreen();
 			};
 
 			client.setScreen(GenericWarningScreen.FeatureWarning(isExperimental, confirmed -> {

@@ -8,5 +8,5 @@
 - Fix gamerule callbacks not being called.
 
 ## 1.1
-- Clicking "proceed" after toggling a feature flag will automatically exit the world back to the title screen. A reload is no longer triggered.
-- Clicking "proceed" without checking the box now keeps you on the same screen. It no longer acts as if "cancel" was clicked.
+- Clicking "proceed" on the feature flag warning screen will automatically exit the world, back to the title screen. A reload is no longer triggered.
+- "Proceed" on the warning screens can no longer be clicked without ticking the checkbox.

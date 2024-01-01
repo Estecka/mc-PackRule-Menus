@@ -3,12 +3,14 @@ package tk.estecka.packrulemenus;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.gui.screen.WarningScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
 public class GenericWarningScreen
 extends WarningScreen
 {
+	private ButtonWidget proceedButton, cancelButton;
 	private final BooleanConsumer onConfirm;
 
 	public GenericWarningScreen(Text header, Text message, Text checkMessage, BooleanConsumer onConfirm){
@@ -36,8 +38,25 @@ extends WarningScreen
 
 	@Override
 	protected void	initButtons(int yOffset){
-		this.addDrawableChild(ButtonWidget.builder(ScreenTexts.PROCEED, button -> onConfirm.accept(checkbox.isChecked())).dimensions(this.width / 2 - 155      , 100 + yOffset, 150, 20).build());
-		this.addDrawableChild(ButtonWidget.builder(ScreenTexts.BACK,    button -> onConfirm.accept(false)               ).dimensions(this.width / 2 - 155 + 160, 100 + yOffset, 150, 20).build());
+		this.proceedButton = ButtonWidget.builder(ScreenTexts.PROCEED, this::OnAccept).dimensions(this.width / 2 - 155      , 100 + yOffset, 150, 20).build();
+		this.cancelButton  = ButtonWidget.builder(ScreenTexts.CANCEL,  this::OnCancel).dimensions(this.width / 2 - 155 + 160, 100 + yOffset, 150, 20).build();
+		this.addDrawableChild(proceedButton);
+		this.addDrawableChild(cancelButton);
+	}
+
+	@Override
+	public void	render(MatrixStack matrices, int mouseX, int mouseY, float delta){
+		this.proceedButton.active = this.checkbox.isChecked();
+		super.render(matrices, mouseX, mouseY, delta);
+	}
+
+	private void	OnAccept(ButtonWidget __){
+		if (checkbox.isChecked())
+			this.onConfirm.accept(true);
+	}
+
+	private void	OnCancel(ButtonWidget __){
+		this.onConfirm.accept(false);
 	}
 
 	@Override

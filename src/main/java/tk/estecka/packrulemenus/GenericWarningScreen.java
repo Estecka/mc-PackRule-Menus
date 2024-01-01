@@ -36,8 +36,17 @@ extends WarningScreen
 
 	@Override
 	protected void	initButtons(int yOffset){
-		this.addDrawableChild(ButtonWidget.builder(ScreenTexts.PROCEED, button -> onConfirm.accept(checkbox.isChecked())).dimensions(this.width / 2 - 155      , 100 + yOffset, 150, 20).build());
-		this.addDrawableChild(ButtonWidget.builder(ScreenTexts.BACK,    button -> onConfirm.accept(false)               ).dimensions(this.width / 2 - 155 + 160, 100 + yOffset, 150, 20).build());
+		this.addDrawableChild(ButtonWidget.builder(ScreenTexts.PROCEED, this::OnAccept).dimensions(this.width / 2 - 155      , 100 + yOffset, 150, 20).build());
+		this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL,  this::OnCancel).dimensions(this.width / 2 - 155 + 160, 100 + yOffset, 150, 20).build());
+	}
+
+	private void	OnAccept(ButtonWidget __){
+		if (checkbox.isChecked())
+			this.onConfirm.accept(true);
+	}
+
+	private void	OnCancel(ButtonWidget __){
+		this.onConfirm.accept(false);
 	}
 
 	@Override

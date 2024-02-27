@@ -1,6 +1,8 @@
 package tk.estecka.packrulemenus.mixin;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -11,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.llamalad7.mixinextras.sugar.Local;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -29,18 +32,19 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.world.GameRules;
+import tk.estecka.clothgamerules.api.ClothGamerulesScreenFactory;
 import tk.estecka.packrulemenus.GenericWarningScreen;
 import tk.estecka.packrulemenus.PackRuleMenus;
 
+@Unique
 @Mixin(OptionsScreen.class)
 abstract public class OptionScreenMixin 
 extends Screen
 {
-	private OptionScreenMixin(){ super(null); throw new AssertionError(); }
+	private OptionScreenMixin(){ super(null); }
 
 	@Shadow abstract ButtonWidget	createButton(Text message, Supplier<Screen> screenSupplier);
 
-	@Unique
 	private IntegratedServer server;
 
 	@Inject( method="init", at=@At(value="INVOKE", ordinal=1, shift=Shift.AFTER, target="net/minecraft/client/gui/widget/GridWidget$Adder.add (Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;") )
@@ -54,9 +58,9 @@ extends Screen
 			final GameRules worldRules = server.getOverworld().getGameRules();
 			adder.add(createButton(
 				Text.translatable("selectWorld.gameRules"),
-				() -> new EditGameRulesScreen(
+				() -> CreateGameruleScreen(
 					worldRules.copy(),
-					optRules -> { RevertScreen(); optRules.ifPresent(r -> worldRules.setAllValues(r, server)); }
+					optRules -> optRules.ifPresent(r -> worldRules.setAllValues(r, server))
 				)
 			));
 
@@ -72,13 +76,18 @@ extends Screen
 			));
 		}
 	}
+	
+	private Screen CreateGameruleScreen(GameRules rules, Consumer<Optional<GameRules>> saveConsumer){
+		if (FabricLoader.getInstance().isModLoaded("cloth-gamerules"))
+			return ClothGamerulesScreenFactory.CreateScreen(this, rules, saveConsumer);
+		else
+			return new EditGameRulesScreen(rules, saveConsumer.andThen( __->RevertScreen() ));
+	}
 
-	@Unique
 	private void	RevertScreen(){
 		client.setScreen((OptionsScreen)(Object)this);
 	};
 
-	@Unique
 	private void	HandleDatapackRefresh(final ResourcePackManager manager, Collection<String> rollback){
 		FeatureSet neoFeatures = manager.getRequestedFeatures();
 		FeatureSet oldFeatures = server.getSaveProperties().getEnabledFeatures();
@@ -113,7 +122,6 @@ extends Screen
 		}
 	}
 
-	@Unique
 	private void	ApplyFlags(final ResourcePackManager manager){
 		FeatureSet features = manager.getRequestedFeatures();
 
@@ -126,7 +134,6 @@ extends Screen
 	}
 
 
-	@Unique
 	private void	ReloadPacks(final ResourcePackManager manager){
 		client.inGameHud.getChatHud().addMessage(Text.translatable("commands.reload.success"));
 

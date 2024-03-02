@@ -10,3 +10,9 @@
 ## 1.1
 - Clicking "proceed" on the feature flag warning screen will automatically exit the world, back to the title screen. A reload is no longer triggered.
 - "Proceed" on the warning screens can no longer be clicked without ticking the checkbox.
+
+## 1.2
+### 1.2.0
+- Integration for Cloth Gamerules screen.
+### 1.2.1
+- Fix Mixin searching for ClotGamerules classes when not installed.

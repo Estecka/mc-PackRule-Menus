@@ -1,8 +1,6 @@
 package tk.estecka.packrulemenus.mixin;
 
 import java.util.Collection;
-import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,13 +11,11 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.llamalad7.mixinextras.sugar.Local;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.screen.pack.PackScreen;
-import net.minecraft.client.gui.screen.world.EditGameRulesScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.resource.DataConfiguration;
@@ -32,7 +28,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.world.GameRules;
-import tk.estecka.clothgamerules.api.ClothGamerulesScreenFactory;
 import tk.estecka.packrulemenus.GenericWarningScreen;
 import tk.estecka.packrulemenus.PackRuleMenus;
 
@@ -58,7 +53,8 @@ extends Screen
 			final GameRules worldRules = server.getOverworld().getGameRules();
 			adder.add(createButton(
 				Text.translatable("selectWorld.gameRules"),
-				() -> CreateGameruleScreen(
+				() -> PackRuleMenus.CreateGameruleScreen(
+					this,
 					worldRules.copy(),
 					optRules -> optRules.ifPresent(r -> worldRules.setAllValues(r, server))
 				)
@@ -75,13 +71,6 @@ extends Screen
 				)
 			));
 		}
-	}
-	
-	private Screen CreateGameruleScreen(GameRules rules, Consumer<Optional<GameRules>> saveConsumer){
-		if (FabricLoader.getInstance().isModLoaded("cloth-gamerules"))
-			return ClothGamerulesScreenFactory.CreateScreen(this, rules, saveConsumer);
-		else
-			return new EditGameRulesScreen(rules, saveConsumer.andThen( __->RevertScreen() ));
 	}
 
 	private void	RevertScreen(){

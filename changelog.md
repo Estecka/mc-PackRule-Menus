@@ -22,6 +22,9 @@
 
 
 # v2
+### 2.0.0
 - The menu buttons are back to their original position by default.
 - Added an option to move or remove the menu buttons from the Options screen via ModMenu.
 - The menu buttons are now accessible via Mod Menu.
+### 2.0.1
+- Added Traditional Chinese (zh_tw)

@@ -1,0 +1,17 @@
+{
+	"packrulemenus.config.buttonlocation": "按鈕位置",
+	"packrulemenus.config.buttonlocation.none": "無",
+	"packrulemenus.config.buttonlocation.none.tooltip": "選單按鈕將只能透過 Mod 選單存取",
+	"packrulemenus.config.buttonlocation.options_body": "選項主體",
+	"packrulemenus.config.buttonlocation.options_body.tooltip": "選單按鈕將插入到選項選單的眾多按鈕上方。",
+	"packrulemenus.config.buttonlocation.options_header": "選項標題",
+	"packrulemenus.config.buttonlocation.options_header.tooltip": "選單按鈕將插入到選項選單中難度按鈕的正下方。",
+	"packrulemenus.gui.main.title": "資料包／規則選單",
+	"packrulemenus.gui.worldoptions.title": "世界選項",
+	"packrulemenus.warning.featureflag.title": "功能旗標",
+	"packrulemenus.warning.featureflag.message": "您正在嘗試啟用或停用一個或多個功能旗標。需要重新啟動世界才能套用這些變更。",
+	"packrulemenus.warning.featureflag.checkbox": "我知道我在做什麼；現在退出世界。",
+	"packrulemenus.warning.vanillapack.title": "預設資料包",
+	"packrulemenus.warning.vanillapack.message": "您正在嘗試停用預設資料包。這很可能會導致世界損壞。您確定要繼續嗎？",
+	"packrulemenus.warning.vanillapack.checkbox": "我已準備好面對後果。"
+}

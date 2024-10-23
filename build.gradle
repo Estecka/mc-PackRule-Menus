@@ -29,11 +29,18 @@ repositories {
 loom {
 	runs {
 		client {
+			configName "Client"
 			programArgs "--username"
 			programArgs "Dev"
 			runDir "run/client"
 		}
+		clientClothless {
+			inherit client
+			configName "Client (Clothless)"
+			property("fabric.debug.disableModIds", "cloth-gamerules")
+		}
 		server {
+			configName "Server"
 			runDir "run/server"
 		}
 	}

@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.EditGameRulesScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameRules;
@@ -25,10 +26,11 @@ public class GameruleHandler
 
 	public ButtonWidget CreateButton() {
 		final GameRules worldRules = server.getOverworld().getGameRules();
+		final FeatureSet features = server.getOverworld().getEnabledFeatures();
 
 		return ButtonWidget.builder(
 				Text.translatable("selectWorld.gameRules"),
-				__ -> client.setScreen( CreateGameruleScreen(parent, worldRules.copy(), optRules -> optRules.ifPresent(r -> worldRules.setAllValues(r, server))) )
+				__ -> client.setScreen( CreateGameruleScreen(parent, worldRules.copy(features), optRules -> optRules.ifPresent(r -> worldRules.setAllValues(r, server))) )
 			)
 			.build()
 			;

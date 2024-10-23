@@ -15,7 +15,7 @@ Whenever possible, the mod will show a warning after toggling one of them, and o
 However, some type of packs cannot be detected, and no warning will be displayed for those.
 
 ### Registry Packs
-The new type of packs introduced in MC 1.21. Packs that add data to registries (painting variants, etc), **are not detected by the mod**, but still require a world restart to fully take effects.
+The new type of packs introduced in MC 1.21, those packs which add data to registries (painting variants, etc), **are not detected by the mod**, but still require a world restart to fully take effects.
 
 Toggling these packs may cause some errors in the log, but those are benign so long as you restart the world immediately afterward. This behaviour is no different from using the `/datapack` command.
 

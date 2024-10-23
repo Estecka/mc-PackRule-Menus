@@ -28,3 +28,5 @@
 - The menu buttons are now accessible via Mod Menu.
 ### 2.0.1
 - Added Traditional Chinese (zh_tw)
+### 2.0.2
+- Updated for MC 1.21.2

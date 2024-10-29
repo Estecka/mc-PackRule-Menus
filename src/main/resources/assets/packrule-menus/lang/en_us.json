@@ -1,4 +1,6 @@
 {
+	"packrulemenus.config.askPackConfirmation": "Always ask for confirmation before reloading datapacks.",
+	"packrulemenus.config.askPackConfirmation.tooltip": "This will also give you the option to restart the world gracefully.",
 	"packrulemenus.config.buttonlocation": "Buttons Location",
 	"packrulemenus.config.buttonlocation.none": "None",
 	"packrulemenus.config.buttonlocation.none.tooltip": "The menu buttons will only be accessible via ModMenu",
@@ -11,8 +13,8 @@
 	"packrulemenus.warning.featureflag.title": "Feature Flags",
 	"packrulemenus.warning.featureflag.message": "You are attempting to enable or disable one or more feature flags. Restarting the world is required to apply those changes.",
 	"packrulemenus.warning.featureflag.checkbox": "I know what I'm doing; exit the world now.",
-	"packrulemenus.warning.packConfirmation.title": "Confirm datapack changes ?",
-	"packrulemenus.warning.packConfirmation.message": "Note that since MC 1.21, some datapacks may require a world restart in order to take effect.",
+	"packrulemenus.warning.packConfirmation.title": "Datapack Reload",
+	"packrulemenus.warning.packConfirmation.message": "Reload using the selected datapack ? \n\nNote that since MC 1.21, some datapacks may require a world restart in order to take effect.",
 	"packrulemenus.warning.packConfirmation.checkbox": "(Optional) Exit the world before reloading.",
 	"packrulemenus.warning.vanillapack.title": "Vanilla Data-Pack",
 	"packrulemenus.warning.vanillapack.message": "You are attempting to disable the Vanilla Datapack. THIS IS VERY LIKELY TO BREAK THE WORLD. Are you REALLY SURE you want to proceed?",

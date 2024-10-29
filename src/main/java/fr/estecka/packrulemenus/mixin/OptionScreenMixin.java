@@ -36,7 +36,7 @@ extends Screen
 		if (!PackRuleMod.CanModifyWorld())
 			return;
 
-		switch (PackRuleMod.BUTTON_LOCATION)
+		switch (PackRuleMod.CONFIG.buttonLocation)
 		{
 			default: return;
 

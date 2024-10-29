@@ -7,13 +7,15 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.text.Text;
-import fr.estecka.packrulemenus.config.ConfigLoader;
+import fr.estecka.packrulemenus.config.Config;
 import fr.estecka.packrulemenus.config.EButtonLocation;
 import fr.estecka.packrulemenus.gui.GenericOptionScreen;
+import static fr.estecka.packrulemenus.PackRuleMod.CONFIG;
 
 
 public class ModMenu
@@ -47,35 +49,40 @@ implements ModMenuApi
 		row.add(rules);
 		row.add(packs);
 
-		screen.AddWidget(CreateConfigButton());
 		screen.AddWidget(row);
+		screen.AddWidget(CreateCyclingButtonOption());
+		screen.AddWidget(CreateConfirmationToggle());
 
 		return screen;
 	}
 
-	static private CyclingButtonWidget<EButtonLocation> CreateConfigButton(){
+	static private CyclingButtonWidget<EButtonLocation> CreateCyclingButtonOption(){
 		var button = CyclingButtonWidget.builder(EButtonLocation::TranslatableName)
 			.values(EButtonLocation.values())
-			.initially(PackRuleMod.BUTTON_LOCATION)
+			.initially(CONFIG.buttonLocation)
 			.tooltip(ModMenu::GetConfigTooltip)
-			.build(Text.translatable("packrulemenus.config.buttonlocation"), ModMenu::OnButtonChanged)
+			.build(Text.translatable("packrulemenus.config.buttonlocation"), (widget,value)->{CONFIG.buttonLocation=value;})
 			;
 
 		button.setWidth(8 + 2 * button.getWidth());
 		return button;
 	}
 
-	static private Tooltip GetConfigTooltip(EButtonLocation e){
-		return Tooltip.of(Text.translatable(e.TranslationKey() + ".tooltip"));
+	static CheckboxWidget CreateConfirmationToggle(){
+		final var client = MinecraftClient.getInstance();
+		var checkbox = CheckboxWidget.builder(Text.translatable("packrulemenus.config.askPackConfirmation"), client.textRenderer)
+			// .tooltip(Tooltip.of(Text.translatable("packrulemenus.config.askPackConfirmation.tooltip")))
+			.callback((widget,checked)->{CONFIG.datapackConfirmation=checked;})
+			.build()
+			;
+
+		if (CONFIG.datapackConfirmation)
+			checkbox.onPress();
+
+		return checkbox;
 	}
 
-	static private void OnButtonChanged(CyclingButtonWidget<?> button, EButtonLocation value){
-		PackRuleMod.BUTTON_LOCATION = value;
-		try {
-			PackRuleMod.CONFIG_IO.Write(new ConfigLoader());
-		}
-		catch (IOException e){
-			PackRuleMod.LOGGER.error(e.getMessage());
-		}
+	static private Tooltip GetConfigTooltip(EButtonLocation e){
+		return Tooltip.of(Text.translatable(e.TranslationKey() + ".tooltip"));
 	}
 }

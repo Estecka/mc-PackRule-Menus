@@ -54,14 +54,13 @@ public class DatapackHandler
 	private void	HandleDatapackRefresh(final ResourcePackManager manager, Collection<String> rollback){
 		FeatureSet neoFeatures = manager.getRequestedFeatures();
 		FeatureSet oldFeatures = server.getSaveProperties().getEnabledFeatures();
-		boolean doSoftConfirm = true;
 
 		if (!neoFeatures.equals(oldFeatures)){
 			boolean isExperimental = FeatureFlags.isNotVanilla(neoFeatures);
 			boolean wasVanillaRemoved = oldFeatures.contains(FeatureFlags.VANILLA) && !neoFeatures.contains(FeatureFlags.VANILLA);
 			ShowFeatureWarning(isExperimental, wasVanillaRemoved);
 		}
-		else if (doSoftConfirm)
+		else if (PackRuleMod.CONFIG.datapackConfirmation)
 			ShowConfirmationScreen();
 		else
 			ReloadPacks();

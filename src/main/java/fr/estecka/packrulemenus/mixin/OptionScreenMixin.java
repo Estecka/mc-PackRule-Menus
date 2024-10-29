@@ -41,14 +41,14 @@ extends Screen
 			default: return;
 
 			case EButtonLocation.OPTIONS_BODY: {
-				body.add(new GameruleHandler(this, server).CreateButton());
+				body.add(GameruleHandler.CreateButton(this, server));
 				body.add(DatapackHandler.CreateButton(this, server));
 				break;
 			}
 
 			case EButtonLocation.OPTIONS_HEADER: {
 				DirectionalLayoutWidget subHeader = DirectionalLayoutWidget.horizontal().spacing(8);
-				subHeader.add(new GameruleHandler(this, server).CreateButton());
+				subHeader.add(GameruleHandler.CreateButton(this, server));
 				subHeader.add(DatapackHandler.CreateButton(this, server));
 
 				header.add(subHeader);

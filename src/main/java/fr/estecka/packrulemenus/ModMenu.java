@@ -34,7 +34,7 @@ implements ModMenuApi
 		ButtonWidget packs, rules;
 		if (showWorldOptions){
 			packs = DatapackHandler.CreateButton(screen, server);
-			rules = new GameruleHandler(screen, server).CreateButton();
+			rules = GameruleHandler.CreateButton(screen, server);
 		}
 		else {
 			packs = ButtonWidget.builder( Text.translatable("selectWorld.dataPacks"), __->{} ).build();

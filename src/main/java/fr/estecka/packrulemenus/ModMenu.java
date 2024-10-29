@@ -33,7 +33,7 @@ implements ModMenuApi
 		boolean showWorldOptions = PackRuleMod.CanModifyWorld();
 		ButtonWidget packs, rules;
 		if (showWorldOptions){
-			packs = new DatapackHandler(screen, server).CreateButton();
+			packs = DatapackHandler.CreateButton(screen, server);
 			rules = new GameruleHandler(screen, server).CreateButton();
 		}
 		else {

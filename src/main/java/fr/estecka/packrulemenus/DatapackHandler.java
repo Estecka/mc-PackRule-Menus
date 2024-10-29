@@ -57,23 +57,15 @@ public class DatapackHandler
 	private void	HandleDatapackRefresh(final ResourcePackManager manager, Collection<String> rollback){
 		FeatureSet neoFeatures = manager.getRequestedFeatures();
 		FeatureSet oldFeatures = server.getSaveProperties().getEnabledFeatures();
+		boolean doSoftConfirm = true;
 
-		if (neoFeatures.equals(oldFeatures)) {
-			ReloadPacks(manager);
-			RevertScreen();
-		}
-		else {
+		if (!neoFeatures.equals(oldFeatures)){
 			boolean isExperimental = FeatureFlags.isNotVanilla(neoFeatures);
 			boolean wasVanillaRemoved = oldFeatures.contains(FeatureFlags.VANILLA) && !neoFeatures.contains(FeatureFlags.VANILLA);
 			BooleanConsumer onConfirm = confirmed -> {
-				if (confirmed){
-					this.ApplyFlags(manager);
-					this.server.stop(false);
-					if (this.client.world != null)
-						this.client.world.disconnect();
-					this.client.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
-					this.client.setScreen(new TitleScreen());
-				} else {
+				if (confirmed)
+					SaveAndQuit(manager);
+				else {
 					manager.setEnabledProfiles(rollback);
 					RevertScreen();
 				}
@@ -85,6 +77,20 @@ public class DatapackHandler
 				else
 					client.setScreen(VanillaWarning(onConfirm));
 			}));
+		}
+		else if (doSoftConfirm) {
+			client.setScreen(ConfirmationScreen(doRestart -> {
+				if (doRestart)
+					SaveAndQuit(manager);
+				else {
+					ReloadPacks(manager);
+					RevertScreen();
+				}
+			}));
+		}
+		else {
+			ReloadPacks(manager);
+			RevertScreen();
 		}
 	}
 
@@ -99,6 +105,14 @@ public class DatapackHandler
 		server.getSaveProperties().updateLevelInfo(new DataConfiguration(IMinecraftServerMixin.callCreateDataPackSettings(manager, true), features));		
 	}
 
+	private void SaveAndQuit(final ResourcePackManager manager){
+		this.ApplyFlags(manager);
+		this.server.stop(false);
+		if (this.client.world != null)
+			this.client.world.disconnect();
+		this.client.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+		this.client.setScreen(new TitleScreen());
+	}
 
 	private void	ReloadPacks(final ResourcePackManager manager){
 		client.inGameHud.getChatHud().addMessage(Text.translatable("commands.reload.success"));
@@ -110,6 +124,16 @@ public class DatapackHandler
 		});
 	}
 
+	static public GenericWarningScreen	ConfirmationScreen(BooleanConsumer onConfirm){
+		return new GenericWarningScreen(
+			Text.translatable("packrulemenus.warning.packConfirmation.title"),
+			Text.translatable("packrulemenus.warning.packConfirmation.message"),
+			Text.translatable("packrulemenus.warning.packConfirmation.checkbox"),
+			false,
+			onConfirm
+		);
+	}
+
 	static public GenericWarningScreen	FeatureWarning(boolean isExperimental, BooleanConsumer onConfirm){
 		MutableText msg = Text.translatable("packrulemenus.warning.featureflag.message");
 		if (isExperimental)
@@ -119,6 +143,7 @@ public class DatapackHandler
 			Text.translatable("packrulemenus.warning.featureflag.title"),
 			msg,
 			Text.translatable("packrulemenus.warning.featureflag.checkbox"),
+			true,
 			onConfirm
 		);
 	}
@@ -128,6 +153,7 @@ public class DatapackHandler
 			Text.translatable("packrulemenus.warning.vanillapack.title"),
 			Text.translatable("packrulemenus.warning.vanillapack.message"),
 			Text.translatable("packrulemenus.warning.vanillapack.checkbox"),
+			true,
 			onConfirm
 		);
 	}

@@ -11,7 +11,10 @@
 	"packrulemenus.warning.featureflag.title": "Feature Flags",
 	"packrulemenus.warning.featureflag.message": "You are attempting to enable or disable one or more feature flags. Restarting the world is required to apply those changes.",
 	"packrulemenus.warning.featureflag.checkbox": "I know what I'm doing; exit the world now.",
+	"packrulemenus.warning.packConfirmation.title": "Confirm datapack changes ?",
+	"packrulemenus.warning.packConfirmation.message": "Note that since MC 1.21, some datapacks may require a world restart in order to take effect.",
+	"packrulemenus.warning.packConfirmation.checkbox": "(Optional) Exit the world before reloading.",
 	"packrulemenus.warning.vanillapack.title": "Vanilla Data-Pack",
-	"packrulemenus.warning.vanillapack.message": "You are attempting to disable the Vanilla Datapack. THIS IS VERY LIKELY TO BREAK THE WORLD. Are you REALLY SURE you want to proceed?",
+	"packrulemenus.warning.vanillapack.message": "You are attempting to disable the Vanilla Datapack. §lThis is very likely to break the world.§r Are you §lreally sure§r you want to proceed?",
 	"packrulemenus.warning.vanillapack.checkbox": "I am ready to face the consequences."
 }

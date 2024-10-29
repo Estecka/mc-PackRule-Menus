@@ -30,3 +30,6 @@
 - Added Traditional Chinese (zh_tw)
 ### 2.0.2
 - Updated for MC 1.21.2
+### 2.1.0
+- Added a confirmation screen for all datapack changes. This include an options to exit the world gracefully.
+

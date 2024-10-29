@@ -53,7 +53,6 @@ extends WarningScreen
 
 	@Override
 	public void	close(){
-		super.close();
-		this.onCancel.run();;
+		this.onCancel.run();
 	}
 }

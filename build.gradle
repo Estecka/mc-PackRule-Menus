@@ -37,6 +37,7 @@ loom {
 		clientClothless {
 			inherit client
 			configName "Client (Clothless)"
+			runDir "run/client"
 			property("fabric.debug.disableModIds", "cloth-gamerules")
 		}
 		server {

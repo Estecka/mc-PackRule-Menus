@@ -31,6 +31,6 @@
 ### 2.0.2
 - Updated for MC 1.21.2
 ### 2.1.0
-- Added a confirmation screen for all datapack changes. This include an options to exit the world gracefully.
+- Added an optional confirmation screen for all datapack changes. This include an options to exit the world gracefully.
 - Fixed in-game sounds playing inside menus after pressing ESC on a warning screen.
 

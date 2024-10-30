@@ -1,7 +1,6 @@
 package fr.estecka.packrulemenus;
 
 import java.util.Collection;
-import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -25,27 +24,25 @@ public class DatapackHandler
 {
 	private final Screen parent;
 	private final IntegratedServer server;
-	private final MinecraftClient client = MinecraftClient.getInstance();
+	private final ResourcePackManager manager;
+	private final Collection<String> rollback;
+	static private final MinecraftClient client = MinecraftClient.getInstance();
 
-	public DatapackHandler(Screen parent, IntegratedServer server){
+	private DatapackHandler(Screen parent, IntegratedServer server){
 		this.parent = parent;
 		this.server = server;
+		this.manager = server.getDataPackManager();
+		this.rollback = manager.getEnabledIds();
 	}
 
-	private void	RevertScreen(){
-		client.setScreen(parent);
-	};
-
-	public ButtonWidget CreateButton(){
+	static public ButtonWidget CreateButton(Screen parent, IntegratedServer server){
 		return ButtonWidget.builder(
 				Text.translatable("selectWorld.dataPacks"),
-				__->client.setScreen( CreateScreen() )
+				__->client.setScreen( new DatapackHandler(parent, server).CreateScreen() )
 			).build();
 	}
 
 	public PackScreen CreateScreen(){
-		Collection<String> rollback = server.getDataPackManager().getEnabledIds();
-
 		return new PackScreen(
 			server.getDataPackManager(),
 			manager -> { HandleDatapackRefresh(manager, rollback); },
@@ -58,37 +55,23 @@ public class DatapackHandler
 		FeatureSet neoFeatures = manager.getRequestedFeatures();
 		FeatureSet oldFeatures = server.getSaveProperties().getEnabledFeatures();
 
-		if (neoFeatures.equals(oldFeatures)) {
-			ReloadPacks(manager);
-			RevertScreen();
-		}
-		else {
+		if (!neoFeatures.equals(oldFeatures)){
 			boolean isExperimental = FeatureFlags.isNotVanilla(neoFeatures);
 			boolean wasVanillaRemoved = oldFeatures.contains(FeatureFlags.VANILLA) && !neoFeatures.contains(FeatureFlags.VANILLA);
-			BooleanConsumer onConfirm = confirmed -> {
-				if (confirmed){
-					this.ApplyFlags(manager);
-					this.server.stop(false);
-					if (this.client.world != null)
-						this.client.world.disconnect();
-					this.client.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
-					this.client.setScreen(new TitleScreen());
-				} else {
-					manager.setEnabledProfiles(rollback);
-					RevertScreen();
-				}
-			};
-
-			client.setScreen(FeatureWarning(isExperimental, confirmed -> {
-				if (!wasVanillaRemoved || !confirmed)
-					onConfirm.accept(confirmed);
-				else
-					client.setScreen(VanillaWarning(onConfirm));
-			}));
+			ShowFeatureWarning(isExperimental, wasVanillaRemoved);
 		}
+		else if (PackRuleMod.CONFIG.datapackConfirmation)
+			ShowConfirmationScreen();
+		else
+			ReloadPacks();
 	}
 
-	private void	ApplyFlags(final ResourcePackManager manager){
+
+/******************************************************************************/
+/* ## Utility                                                                 */
+/******************************************************************************/
+
+	private void	ApplyFlags(){
 		FeatureSet features = manager.getRequestedFeatures();
 
 		String featureNames = "";
@@ -99,8 +82,16 @@ public class DatapackHandler
 		server.getSaveProperties().updateLevelInfo(new DataConfiguration(IMinecraftServerMixin.callCreateDataPackSettings(manager, true), features));		
 	}
 
+	private void SaveAndQuit(){
+		this.ApplyFlags();
+		this.server.stop(false);
+		if (client.world != null)
+			client.world.disconnect();
+		client.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+		client.setScreen(new TitleScreen());
+	}
 
-	private void	ReloadPacks(final ResourcePackManager manager){
+	private void	ReloadPacks(){
 		client.inGameHud.getChatHud().addMessage(Text.translatable("commands.reload.success"));
 
 		server.reloadResources(manager.getEnabledIds()).exceptionally(e -> {
@@ -108,27 +99,57 @@ public class DatapackHandler
 			client.inGameHud.getChatHud().addMessage(Text.translatable("commands.reload.failure").formatted(Formatting.RED));
 			return null;
 		});
+		client.setScreen(parent);
 	}
 
-	static public GenericWarningScreen	FeatureWarning(boolean isExperimental, BooleanConsumer onConfirm){
+	private void Rollback(){
+		this.manager.setEnabledProfiles(rollback);
+		client.setScreen(parent);
+	}
+
+
+/******************************************************************************/
+/* ## Warning Screens                                                         */
+/******************************************************************************/
+
+	public void	ShowConfirmationScreen(){
+		client.setScreen(new GenericWarningScreen(
+			Text.translatable("packrulemenus.warning.packConfirmation.title"),
+			Text.translatable("packrulemenus.warning.packConfirmation.message"),
+			Text.translatable("packrulemenus.warning.packConfirmation.checkbox"),
+			false,
+			checked -> { if(checked) SaveAndQuit(); else ReloadPacks(); },
+			this::Rollback
+		));
+	}
+
+	/**
+	 * @param isExperimental Whether the currently selected packs include
+	 * experimental features. This will be false upon removing all features.
+	 */
+	public void	ShowFeatureWarning(boolean isExperimental, boolean wasVanillaRemoved){
 		MutableText msg = Text.translatable("packrulemenus.warning.featureflag.message");
 		if (isExperimental)
 			msg.append("\n\n").append(Text.translatable("selectWorld.experimental.message"));
 
-		return new GenericWarningScreen(
+		client.setScreen(new GenericWarningScreen(
 			Text.translatable("packrulemenus.warning.featureflag.title"),
 			msg,
 			Text.translatable("packrulemenus.warning.featureflag.checkbox"),
-			onConfirm
-		);
+			true,
+			checked -> { if(wasVanillaRemoved) ShowVanillaWarning(); else if (checked) SaveAndQuit(); },
+			this::Rollback
+		));
 	}
 
-	static public GenericWarningScreen	VanillaWarning(BooleanConsumer onConfirm){
-		return new GenericWarningScreen(
+	public void	ShowVanillaWarning(){
+		client.setScreen(new GenericWarningScreen(
 			Text.translatable("packrulemenus.warning.vanillapack.title"),
 			Text.translatable("packrulemenus.warning.vanillapack.message"),
 			Text.translatable("packrulemenus.warning.vanillapack.checkbox"),
-			onConfirm
-		);
+			true,
+			checked -> { if(checked) SaveAndQuit(); },
+			this::Rollback
+		));
 	}
 }

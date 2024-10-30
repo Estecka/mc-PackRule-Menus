@@ -13,11 +13,15 @@ public class GenericWarningScreen
 extends WarningScreen
 {
 	private ButtonWidget proceedButton, cancelButton;
+	private final boolean isCheckRequired;
 	private final BooleanConsumer onConfirm;
+	private final Runnable onCancel;
 
-	public GenericWarningScreen(Text header, Text message, Text checkMessage, BooleanConsumer onConfirm){
+	public GenericWarningScreen(Text header, Text message, Text checkMessage, boolean isCheckRequired, BooleanConsumer onConfirm, Runnable onCancel){
 		super(header, message, checkMessage, message);
+		this.isCheckRequired = isCheckRequired;
 		this.onConfirm = onConfirm;
+		this.onCancel = onCancel;
 	}
 
 	@Override
@@ -32,22 +36,23 @@ extends WarningScreen
 
 	@Override
 	public void	render(DrawContext context, int mouseX, int mouseY, float delta){
-		this.proceedButton.active = this.checkbox.isChecked();
+		this.proceedButton.active = this.checkbox.isChecked() || !isCheckRequired;
 		super.render(context, mouseX, mouseY, delta);
 	}
 
 	private void	OnAccept(ButtonWidget __){
 		if (checkbox.isChecked())
 			this.onConfirm.accept(true);
+		else if (!isCheckRequired)
+			this.onConfirm.accept(false);
 	}
 
 	private void	OnCancel(ButtonWidget __){
-		this.onConfirm.accept(false);
+		this.onCancel.run();
 	}
 
 	@Override
 	public void	close(){
-		super.close();
-		this.onConfirm.accept(false);
+		this.onCancel.run();
 	}
 }

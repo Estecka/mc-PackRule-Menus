@@ -23,6 +23,10 @@ public class GameruleHandler
 		this.server = server;
 	}
 
+	static public ButtonWidget CreateButton(Screen parent, IntegratedServer server) {
+		return new GameruleHandler(parent, server).CreateButton();
+	}
+
 	public ButtonWidget CreateButton() {
 		final GameRules worldRules = server.getOverworld().getGameRules();
 

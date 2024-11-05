@@ -6,8 +6,7 @@ import org.slf4j.LoggerFactory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.integrated.IntegratedServer;
 import fr.estecka.packrulemenus.config.ConfigIO;
-import fr.estecka.packrulemenus.config.ConfigLoader;
-import fr.estecka.packrulemenus.config.EButtonLocation;
+import fr.estecka.packrulemenus.config.Config;
 
 
 public class PackRuleMod
@@ -16,12 +15,12 @@ public class PackRuleMod
 	static public final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
 	static public final ConfigIO CONFIG_IO = new ConfigIO(MODID+".properties");
-	static public EButtonLocation BUTTON_LOCATION = EButtonLocation.OPTIONS_HEADER;
+	static public final Config CONFIG = new Config();
 
 	static
 	{
 		try {
-			CONFIG_IO.GetIfExists(new ConfigLoader());
+			CONFIG_IO.GetIfExists(CONFIG);
 		}
 		catch (IOException e){
 			LOGGER.error(e.getMessage());

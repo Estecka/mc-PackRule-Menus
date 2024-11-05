@@ -1,5 +1,7 @@
 package fr.estecka.packrulemenus.gui;
 
+import java.io.IOException;
+import fr.estecka.packrulemenus.PackRuleMod;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
@@ -39,5 +41,11 @@ extends Screen
 	@Override
 	public void close(){
 		this.client.setScreen(parent);
+		try {
+			PackRuleMod.CONFIG_IO.Write(PackRuleMod.CONFIG);
+		}
+		catch (IOException e){
+			PackRuleMod.LOGGER.error(e.getMessage());
+		}
 	}
 }

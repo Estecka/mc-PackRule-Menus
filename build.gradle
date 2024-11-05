@@ -26,6 +26,27 @@ repositories {
 	}
 }
 
+loom {
+	runs {
+		client {
+			configName "Client"
+			programArgs "--username"
+			programArgs "Dev"
+			runDir "run/client"
+		}
+		clientClothless {
+			inherit client
+			configName "Client (Clothless)"
+			runDir "run/client"
+			property("fabric.debug.disableModIds", "cloth-gamerules")
+		}
+		server {
+			configName "Server"
+			runDir "run/server"
+		}
+	}
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"

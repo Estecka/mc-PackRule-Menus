@@ -27,7 +27,7 @@
 		"packrule-menus.mixins.json"
 	],
 	"depends": {
-		"minecraft": ">=1.21.2 <1.21.6",
+		"minecraft": "~1.21.6",
 		"fabricloader": ">=0.16.7",
 		"java": ">=21"
 	}

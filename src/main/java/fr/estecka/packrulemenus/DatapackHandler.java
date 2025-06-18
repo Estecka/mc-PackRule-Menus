@@ -2,11 +2,11 @@ package fr.estecka.packrulemenus;
 
 import java.util.Collection;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.pack.PackScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.resource.DataConfiguration;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
@@ -86,8 +86,8 @@ public class DatapackHandler
 		this.ApplyFlags();
 		this.server.stop(false);
 		if (client.world != null)
-			client.world.disconnect();
-		client.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+			client.world.disconnect(ClientWorld.QUITTING_MULTIPLAYER_TEXT);
+		client.disconnectWithSavingScreen();
 		client.setScreen(new TitleScreen());
 	}
 

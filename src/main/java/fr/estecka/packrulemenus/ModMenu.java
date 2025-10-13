@@ -1,6 +1,5 @@
 package fr.estecka.packrulemenus;
 
-import java.io.IOException;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +11,6 @@ import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.text.Text;
-import fr.estecka.packrulemenus.config.Config;
 import fr.estecka.packrulemenus.config.EButtonLocation;
 import fr.estecka.packrulemenus.gui.GenericOptionScreen;
 import static fr.estecka.packrulemenus.PackRuleMod.CONFIG;
@@ -72,12 +70,10 @@ implements ModMenuApi
 		final var client = MinecraftClient.getInstance();
 		var checkbox = CheckboxWidget.builder(Text.translatable("packrulemenus.config.askPackConfirmation"), client.textRenderer)
 			// .tooltip(Tooltip.of(Text.translatable("packrulemenus.config.askPackConfirmation.tooltip")))
+			.checked(CONFIG.datapackConfirmation)
 			.callback((widget,checked)->{CONFIG.datapackConfirmation=checked;})
 			.build()
 			;
-
-		if (CONFIG.datapackConfirmation)
-			checkbox.onPress();
 
 		return checkbox;
 	}

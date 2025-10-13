@@ -37,3 +37,5 @@
 - Fixed in-game sounds playing inside menus after pressing ESC on a warning screen.
 ### 2.1.1
 - Updated for MC 1.21.6
+### 2.1.2
+- Updated for MC 1.21.9

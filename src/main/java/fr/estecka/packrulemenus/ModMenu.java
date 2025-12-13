@@ -41,9 +41,8 @@ implements ModMenuApi
 	}
 
 	static private CyclingButtonWidget<EButtonLocation> CreateCyclingButtonOption(){
-		var button = CyclingButtonWidget.builder(EButtonLocation::TranslatableName)
+		var button = CyclingButtonWidget.builder(EButtonLocation::TranslatableName, CONFIG.buttonLocation)
 			.values(EButtonLocation.values())
-			.initially(CONFIG.buttonLocation)
 			.tooltip(ModMenu::GetConfigTooltip)
 			.build(Text.translatable("packrulemenus.config.buttonlocation"), (widget,value)->{CONFIG.buttonLocation=value;})
 			;

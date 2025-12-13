@@ -10,7 +10,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.text.Text;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.rule.GameRules;
 import tk.estecka.clothgamerules.api.ClothGamerulesScreenFactory;
 
 public class GameruleHandler
@@ -38,7 +38,7 @@ public class GameruleHandler
 
 		return ButtonWidget.builder(
 			Text.translatable(BUTTON_TEXT),
-			__ -> client.setScreen( CreateGameruleScreen(parent, worldRules.copy(features), optRules -> optRules.ifPresent(r -> worldRules.setAllValues(r, server))) )
+			__ -> client.setScreen( CreateGameruleScreen(parent, worldRules.withEnabledFeatures(features), optRules -> optRules.ifPresent(r -> worldRules.copyFrom(r, server))) )
 		).build();
 	}
 

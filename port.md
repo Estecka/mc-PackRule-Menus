@@ -23,3 +23,6 @@ Current master
 ### 1.21.9
 #### Backward compatible workarounds:
 - `Checkbox.onPress` now takes an argument. Use `checked` on the builder instead.
+
+### 1.21.11
+- `CyclingButtonWidget::builder` now takes the initial value immediately instead of as a sub-call/

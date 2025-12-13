@@ -15,17 +15,21 @@ import tk.estecka.clothgamerules.api.ClothGamerulesScreenFactory;
 
 public class GameruleHandler
 {
+	static public final String BUTTON_TEXT = "selectWorld.gameRules";
+
 	private final Screen parent;
 	private final IntegratedServer server;
-	private final MinecraftClient client = MinecraftClient.getInstance();
+	static private final MinecraftClient client = MinecraftClient.getInstance();
 
 	public GameruleHandler(Screen parent, IntegratedServer server){
 		this.parent = parent;
 		this.server = server;
 	}
 
-	static public ButtonWidget CreateButton(Screen parent, IntegratedServer server) {
-		return new GameruleHandler(parent, server).CreateButton();
+	static public ButtonWidget CreateButton(Screen parent) {
+		return PackRuleMod.DisabledButton(BUTTON_TEXT)
+			.orElseGet(()->new GameruleHandler(parent, client.getServer()).CreateButton())
+			;
 	}
 
 	public ButtonWidget CreateButton() {
@@ -33,11 +37,9 @@ public class GameruleHandler
 		final FeatureSet features = server.getOverworld().getEnabledFeatures();
 
 		return ButtonWidget.builder(
-				Text.translatable("selectWorld.gameRules"),
-				__ -> client.setScreen( CreateGameruleScreen(parent, worldRules.copy(features), optRules -> optRules.ifPresent(r -> worldRules.setAllValues(r, server))) )
-			)
-			.build()
-			;
+			Text.translatable(BUTTON_TEXT),
+			__ -> client.setScreen( CreateGameruleScreen(parent, worldRules.copy(features), optRules -> optRules.ifPresent(r -> worldRules.setAllValues(r, server))) )
+		).build();
 	}
 
 

@@ -3,13 +3,23 @@
 Current master
 
 ### 1.20.0
-#### No Workarounds:
 - `MatrixStack` parameters are replaced with `DrawContext` in most GUI.
 
 ### 1.20.5
-#### No Workaround:
 - The option screen's layout has changed, causing custom buttons to appear in a different place.
 - `WarningScreen::initButtons` was replaced with `getLayout`.
-#### Possible Workaround:
+#### Possible backward compatible workarounds:
 - `ResourcePackManager::getEnabledNames` was renamed to `getEnabledIds` (Yarn Mappings changes)
 - `MinecraftServer::createDataPackSettings` now takes an extra parameter: The function is simple enough to be reimplemented locally.
+
+## 1.21.2
+### No workaround
+- Gamerules constructors no require a FeatureSet as parameter.
+
+### 1.21.6
+- `World::disconnect` now takes a parameter.
+- `MinecraftClient::disconnect` takes new parameters.
+
+### 1.21.9
+#### Backward compatible workarounds:
+- `Checkbox.onPress` now takes an argument. Use `checked` on the builder instead.

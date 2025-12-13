@@ -22,6 +22,8 @@ import fr.estecka.packrulemenus.mixin.IMinecraftServerMixin;
 
 public class DatapackHandler
 {
+	static public final String BUTTON_TEXT = "selectWorld.dataPacks";
+
 	private final Screen parent;
 	private final IntegratedServer server;
 	private final ResourcePackManager manager;
@@ -35,11 +37,17 @@ public class DatapackHandler
 		this.rollback = manager.getEnabledIds();
 	}
 
-	static public ButtonWidget CreateButton(Screen parent, IntegratedServer server){
+	static public ButtonWidget CreateButton(Screen parent){
+		return PackRuleMod.DisabledButton(BUTTON_TEXT)
+			.orElseGet(()->new DatapackHandler(parent, client.getServer()).CreateButton())
+			;
+	}
+
+	public ButtonWidget CreateButton(){
 		return ButtonWidget.builder(
-				Text.translatable("selectWorld.dataPacks"),
-				__->client.setScreen( new DatapackHandler(parent, server).CreateScreen() )
-			).build();
+			Text.translatable(BUTTON_TEXT),
+			__->client.setScreen( this.CreateScreen() )
+		).build();
 	}
 
 	public PackScreen CreateScreen(){

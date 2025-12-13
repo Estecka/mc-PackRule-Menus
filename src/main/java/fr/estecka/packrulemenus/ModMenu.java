@@ -9,7 +9,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
-import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.text.Text;
 import fr.estecka.packrulemenus.config.EButtonLocation;
 import fr.estecka.packrulemenus.gui.GenericOptionScreen;
@@ -25,23 +24,10 @@ implements ModMenuApi
 	}
 
 	static public Screen ModMenuScreen(Screen parent){
-		final MinecraftClient client = MinecraftClient.getInstance();
-		final IntegratedServer server = client.getServer();
-
 		GenericOptionScreen screen = new GenericOptionScreen(Text.translatable("packrulemenus.gui.main.title"), parent);
 
-		boolean showWorldOptions = PackRuleMod.CanModifyWorld();
-		ButtonWidget packs, rules;
-		if (showWorldOptions){
-			packs = DatapackHandler.CreateButton(screen, server);
-			rules = GameruleHandler.CreateButton(screen, server);
-		}
-		else {
-			packs = ButtonWidget.builder( Text.translatable("selectWorld.dataPacks"), __->{} ).build();
-			rules = ButtonWidget.builder( Text.translatable("selectWorld.gameRules"), __->{} ).build();
-			packs.active = false;
-			rules.active = false;
-		}
+		ButtonWidget packs = DatapackHandler.CreateButton(parent);
+		ButtonWidget rules = GameruleHandler.CreateButton(parent);
 
 		DirectionalLayoutWidget row = DirectionalLayoutWidget.horizontal().spacing(8);
 		row.add(rules);

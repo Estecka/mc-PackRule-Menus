@@ -1,7 +1,10 @@
+*.bak
+
 # gradle
 
 .gradle/
 build/
+libs/
 out/
 classes/
 
@@ -21,8 +24,8 @@ classes/
 .settings/
 .vscode/
 bin/
-.factorypath
 .classpath
+.factorypath
 .project
 
 # macos

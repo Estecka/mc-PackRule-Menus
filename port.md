@@ -12,6 +12,10 @@ Current master
 - `ResourcePackManager::getEnabledNames` was renamed to `getEnabledIds` (Yarn Mappings changes)
 - `MinecraftServer::createDataPackSettings` now takes an extra parameter: The function is simple enough to be reimplemented locally.
 
+## 1.21.2
+### No workaround
+- Gamerules constructors no require a FeatureSet as parameter.
+
 ### 1.21.6
 - `World::disconnect` now takes a parameter.
 - `MinecraftClient::disconnect` takes new parameters.

@@ -13,7 +13,6 @@ import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.server.integrated.IntegratedServer;
 import fr.estecka.packrulemenus.PackRuleMod;
 import fr.estecka.packrulemenus.DatapackHandler;
 import fr.estecka.packrulemenus.GameruleHandler;
@@ -31,25 +30,20 @@ extends Screen
 
 	@Inject( method="init", at=@At(value="INVOKE", ordinal=0, target="net/minecraft/client/gui/widget/GridWidget$Adder.add (Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;") )
 	private void gameruleMenu$Init(CallbackInfo info, @Local GridWidget.Adder body, @Local(ordinal=0) DirectionalLayoutWidget header){
-		final IntegratedServer server = this.client.getServer();
-
-		if (!PackRuleMod.CanModifyWorld())
-			return;
-
 		switch (PackRuleMod.CONFIG.buttonLocation)
 		{
 			default: return;
 
 			case EButtonLocation.OPTIONS_BODY: {
-				body.add(GameruleHandler.CreateButton(this, server));
-				body.add(DatapackHandler.CreateButton(this, server));
+				body.add(GameruleHandler.CreateButton(this));
+				body.add(DatapackHandler.CreateButton(this));
 				break;
 			}
 
 			case EButtonLocation.OPTIONS_HEADER: {
 				DirectionalLayoutWidget subHeader = DirectionalLayoutWidget.horizontal().spacing(8);
-				subHeader.add(GameruleHandler.CreateButton(this, server));
-				subHeader.add(DatapackHandler.CreateButton(this, server));
+				subHeader.add(GameruleHandler.CreateButton(this));
+				subHeader.add(DatapackHandler.CreateButton(this));
 
 				header.add(subHeader);
 				header.spacing(4);

@@ -17,11 +17,12 @@
 ### 1.2.1
 - Fix Mixin searching for ClotGamerules classes when not installed.
 ### 1.2.2
-- Updated for MC1.20.5.
+- Updated for MC 1.20.5.
 - In 1.20.5, the position of the buttons in the option menu has changed slightly.
 
 
 # v2
+## 2.0
 ### 2.0.0
 - The menu buttons are back to their original position by default.
 - Added an option to move or remove the menu buttons from the Options screen via ModMenu.
@@ -30,7 +31,15 @@
 - Added Traditional Chinese (zh_tw)
 ### 2.0.2
 - Updated for MC 1.21.2
+
+## 2.1
 ### 2.1.0
 - Added an optional confirmation screen for all datapack changes. This includes an option to exit the world gracefully.
 - Fixed in-game sounds playing inside menus after pressing ESC on a warning screen.
+### 2.1.1
+- Updated for MC 1.21.6
+### 2.1.2
+- Updated for MC 1.21.9
 
+## 2.2.0
+- Added tooltip for worlds with disabled commands.

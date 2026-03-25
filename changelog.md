@@ -43,3 +43,9 @@
 
 ## 2.2.0
 - Added tooltip for worlds with disabled commands.
+
+
+# v3
+- Removed the mod's gamerules menu button.
+- Moved the datapack button the the new World Options screen.
+- Removed button location option.

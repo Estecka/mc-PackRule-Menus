@@ -1,46 +1,46 @@
 package fr.estecka.packrulemenus.gui;
 
 import java.io.IOException;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.client.gui.layouts.LayoutElement;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import fr.estecka.packrulemenus.PackRuleMod;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
 
 public class GenericOptionScreen
 extends Screen
 {
 	private final Screen parent;
 
-	private final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
-	private final DirectionalLayoutWidget body = DirectionalLayoutWidget.vertical().spacing(8);
-	private final ButtonWidget footer = ButtonWidget.builder( ScreenTexts.DONE, b->this.close() ).width(200).build();
+	private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
+	private final LinearLayout body = LinearLayout.vertical().spacing(8);
+	private final Button footer = Button.builder( CommonComponents.GUI_DONE, b->this.onClose() ).width(200).build();
 
-	public GenericOptionScreen(Text title, Screen parent) {
+	public GenericOptionScreen(Component title, Screen parent) {
 		super(title);
 		this.parent = parent;
-		layout.addFooter(footer);
+		layout.addToFooter(footer);
 	}
 
-	public void AddWidget(Widget widget){
-		body.add(widget);
+	public void AddWidget(LayoutElement widget){
+		body.addChild(widget);
 	}
 
 	@Override
 	public void init(){
-		layout.addHeader(this.title, this.textRenderer);
-		layout.addBody(body);
+		layout.addTitleHeader(this.title, this.font);
+		layout.addToContents(body);
 
-		layout.forEachChild(e -> this.addDrawableChild(e));
-		layout.refreshPositions();
+		layout.visitWidgets(e -> this.addRenderableWidget(e));
+		layout.arrangeElements();
 	}
 
 	@Override
-	public void close(){
-		this.client.setScreen(parent);
+	public void onClose(){
+		this.minecraft.setScreen(parent);
 		try {
 			PackRuleMod.CONFIG_IO.Write(PackRuleMod.CONFIG);
 		}

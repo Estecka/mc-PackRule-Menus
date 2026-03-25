@@ -13,7 +13,7 @@ extends ConfigIO.AFixedCoded
 	@Override
 	public Map<String, Property<?>> GetProperties(){
 		return new HashMap<>(){{
-			put("button.location", new Property<EButtonLocation>(()->buttonLocation, e->buttonLocation=e, EButtonLocation::parse, EButtonLocation::toString));
+			// put("button.location", new Property<EButtonLocation>(()->buttonLocation, e->buttonLocation=e, EButtonLocation::parse, EButtonLocation::toString));
 			put("datapack.askConfirmation", Property.Boolean(()->datapackConfirmation, b->datapackConfirmation=b));
 		}};
 	}

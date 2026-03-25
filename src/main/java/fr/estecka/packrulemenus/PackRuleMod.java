@@ -2,13 +2,13 @@ package fr.estecka.packrulemenus;
 
 import java.io.IOException;
 import java.util.Optional;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.server.IntegratedServer;
+import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.text.Text;
 import fr.estecka.packrulemenus.config.ConfigIO;
 import fr.estecka.packrulemenus.config.Config;
 
@@ -32,30 +32,30 @@ public class PackRuleMod
 	}
 
 	static public boolean CanModifyWorld(){
-		final MinecraftClient client = MinecraftClient.getInstance();
-		final IntegratedServer server = client.getServer();
+		final Minecraft client = Minecraft.getInstance();
+		final IntegratedServer server = client.getSingleplayerServer();
 
-		return client.isIntegratedServerRunning()
-		    && server.getSaveProperties().areCommandsAllowed()
-		    && server.getOverworld() != null
+		return client.hasSingleplayerServer()
+		    && server.getWorldData().isAllowCommands()
+		    && server.overworld() != null
 		    ;
 	}
 
-	static public Optional<ButtonWidget> DisabledButton(String buttonText){
-		final MinecraftClient client = MinecraftClient.getInstance();
-		final IntegratedServer server = client.getServer();
+	static public Optional<Button> DisabledButton(String buttonText){
+		final Minecraft client = Minecraft.getInstance();
+		final IntegratedServer server = client.getSingleplayerServer();
 		String tooltip = null;
 
-		if (!client.isIntegratedServerRunning() || server.getOverworld() == null)
+		if (!client.hasSingleplayerServer() || server.overworld() == null)
 			tooltip = "packrulemenus.gui.disabled.noworld";
-		else if (!server.getSaveProperties().areCommandsAllowed())
+		else if (!server.getWorldData().isAllowCommands())
 			tooltip = "packrulemenus.gui.disabled.cheatsdisabled";
 
 		if (tooltip == null)
 			return Optional.empty();
 		else {
-			var button = ButtonWidget.builder( Text.translatable(buttonText), __->{} )
-				.tooltip(Tooltip.of(Text.translatable(tooltip)))
+			var button = Button.builder( Component.translatable(buttonText), __->{} )
+				.tooltip(Tooltip.create(Component.translatable(tooltip)))
 				.build();
 			button.active = false;
 			return Optional.of(button);

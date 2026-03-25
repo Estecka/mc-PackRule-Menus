@@ -1,7 +1,8 @@
 package fr.estecka.packrulemenus.config;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
+@Deprecated
 public enum EButtonLocation
 {
 	NONE("none"),
@@ -34,8 +35,8 @@ public enum EButtonLocation
 		return "packrulemenus.config.buttonlocation." + this.name;
 	}
 
-	public Text TranslatableName() {
-		return Text.translatable(this.TranslationKey());
+	public Component TranslatableName() {
+		return Component.translatable(this.TranslationKey());
 	}
 
 }

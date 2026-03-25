@@ -8,7 +8,7 @@
 	"packrulemenus.config.buttonlocation.options_body.tooltip": "The menu buttons will be lower below the Options menu header.\n\nThis may work around issues caused by other mods' buttons.",
 	"packrulemenus.config.buttonlocation.options_header": "Options Header",
 	"packrulemenus.config.buttonlocation.options_header.tooltip": "The menu buttons will be inserted right below the Difficulty button in the Options menu.\n\nIf this option causes overlap with another mod's buttons, please report the issue to *the other mod*.",
-	"packrulemenus.gui.main.title": "Packs/Rules Menus",
+	"packrulemenus.gui.main.title": "Datapack Menu",
 	"packrulemenus.gui.worldoptions.title": "World Options",
 	"packrulemenus.gui.disabled.cheatsdisabled": "Commands are disabled in this world.",
 	"packrulemenus.gui.disabled.noworld": "No local world running.",

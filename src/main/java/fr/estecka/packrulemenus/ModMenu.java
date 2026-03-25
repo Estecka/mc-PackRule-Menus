@@ -2,16 +2,16 @@ package fr.estecka.packrulemenus;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.CheckboxWidget;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
-import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
-import net.minecraft.text.Text;
 import fr.estecka.packrulemenus.config.EButtonLocation;
 import fr.estecka.packrulemenus.gui.GenericOptionScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import static fr.estecka.packrulemenus.PackRuleMod.CONFIG;
 
 
@@ -24,39 +24,38 @@ implements ModMenuApi
 	}
 
 	static public Screen ModMenuScreen(Screen parent){
-		GenericOptionScreen screen = new GenericOptionScreen(Text.translatable("packrulemenus.gui.main.title"), parent);
+		GenericOptionScreen screen = new GenericOptionScreen(Component.translatable("packrulemenus.gui.main.title"), parent);
 
-		ButtonWidget packs = DatapackHandler.CreateButton(parent);
-		ButtonWidget rules = GameruleHandler.CreateButton(parent);
+		Button packs = DatapackHandler.CreateButton(parent);
+		packs.setWidth(8 + 2 * packs.getWidth());
 
-		DirectionalLayoutWidget row = DirectionalLayoutWidget.horizontal().spacing(8);
-		row.add(rules);
-		row.add(packs);
+		LinearLayout row = LinearLayout.horizontal().spacing(8);
+		row.addChild(packs);
 
 		screen.AddWidget(row);
-		screen.AddWidget(CreateCyclingButtonOption());
+		// screen.AddWidget(CreateCyclingButtonOption());
 		screen.AddWidget(CreateConfirmationToggle());
 
 		return screen;
 	}
 
-	static private CyclingButtonWidget<EButtonLocation> CreateCyclingButtonOption(){
-		var button = CyclingButtonWidget.builder(EButtonLocation::TranslatableName, CONFIG.buttonLocation)
-			.values(EButtonLocation.values())
-			.tooltip(ModMenu::GetConfigTooltip)
-			.build(Text.translatable("packrulemenus.config.buttonlocation"), (widget,value)->{CONFIG.buttonLocation=value;})
+	static private CycleButton<EButtonLocation> CreateCyclingButtonOption(){
+		var button = CycleButton.builder(EButtonLocation::TranslatableName, CONFIG.buttonLocation)
+			.withValues(EButtonLocation.values())
+			.withTooltip(ModMenu::GetConfigTooltip)
+			.create(Component.translatable("packrulemenus.config.buttonlocation"), (widget,value)->{CONFIG.buttonLocation=value;})
 			;
 
 		button.setWidth(8 + 2 * button.getWidth());
 		return button;
 	}
 
-	static CheckboxWidget CreateConfirmationToggle(){
-		final var client = MinecraftClient.getInstance();
-		var checkbox = CheckboxWidget.builder(Text.translatable("packrulemenus.config.askPackConfirmation"), client.textRenderer)
+	static Checkbox CreateConfirmationToggle(){
+		final var client = Minecraft.getInstance();
+		var checkbox = Checkbox.builder(Component.translatable("packrulemenus.config.askPackConfirmation"), client.font)
 			// .tooltip(Tooltip.of(Text.translatable("packrulemenus.config.askPackConfirmation.tooltip")))
-			.checked(CONFIG.datapackConfirmation)
-			.callback((widget,checked)->{CONFIG.datapackConfirmation=checked;})
+			.selected(CONFIG.datapackConfirmation)
+			.onValueChange((widget,checked)->{CONFIG.datapackConfirmation=checked;})
 			.build()
 			;
 
@@ -64,6 +63,6 @@ implements ModMenuApi
 	}
 
 	static private Tooltip GetConfigTooltip(EButtonLocation e){
-		return Tooltip.of(Text.translatable(e.TranslationKey() + ".tooltip"));
+		return Tooltip.create(Component.translatable(e.TranslationKey() + ".tooltip"));
 	}
 }

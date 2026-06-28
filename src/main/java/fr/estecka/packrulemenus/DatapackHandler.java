@@ -46,7 +46,7 @@ public class DatapackHandler
 	public Button CreateButton(){
 		return Button.builder(
 			Component.translatable(BUTTON_TEXT),
-			__->client.setScreen( this.CreateScreen() )
+			__->client.setScreenAndShow( this.CreateScreen() )
 		).build();
 	}
 
@@ -96,23 +96,23 @@ public class DatapackHandler
 		if (client.level != null)
 			client.level.disconnect(ClientLevel.DEFAULT_QUIT_MESSAGE);
 		client.disconnectWithSavingScreen();
-		client.setScreen(new TitleScreen());
+		client.setScreenAndShow(new TitleScreen());
 	}
 
 	private void	ReloadPacks(){
-		client.gui.getChat().addServerSystemMessage(Component.translatable("commands.reload.success"));
+		client.gui.hud.getChat().addServerSystemMessage(Component.translatable("commands.reload.success"));
 
 		server.reloadResources(manager.getSelectedIds()).exceptionally(e -> {
 			PackRuleMod.LOGGER.error("{}", e);
-			client.gui.getChat().addServerSystemMessage(Component.translatable("commands.reload.failure").withStyle(ChatFormatting.RED));
+			client.gui.hud.getChat().addServerSystemMessage(Component.translatable("commands.reload.failure").withStyle(ChatFormatting.RED));
 			return null;
 		});
-		client.setScreen(parent);
+		client.setScreenAndShow(parent);
 	}
 
 	private void Rollback(){
 		this.manager.setSelected(rollback);
-		client.setScreen(parent);
+		client.setScreenAndShow(parent);
 	}
 
 
@@ -121,7 +121,7 @@ public class DatapackHandler
 /******************************************************************************/
 
 	public void	ShowConfirmationScreen(){
-		client.setScreen(new GenericWarningScreen(
+		client.setScreenAndShow(new GenericWarningScreen(
 			Component.translatable("packrulemenus.warning.packConfirmation.title"),
 			Component.translatable("packrulemenus.warning.packConfirmation.message"),
 			Component.translatable("packrulemenus.warning.packConfirmation.checkbox"),
@@ -140,7 +140,7 @@ public class DatapackHandler
 		if (isExperimental)
 			msg.append("\n\n").append(Component.translatable("selectWorld.experimental.message"));
 
-		client.setScreen(new GenericWarningScreen(
+		client.setScreenAndShow(new GenericWarningScreen(
 			Component.translatable("packrulemenus.warning.featureflag.title"),
 			msg,
 			Component.translatable("packrulemenus.warning.featureflag.checkbox"),
@@ -151,7 +151,7 @@ public class DatapackHandler
 	}
 
 	public void	ShowVanillaWarning(){
-		client.setScreen(new GenericWarningScreen(
+		client.setScreenAndShow(new GenericWarningScreen(
 			Component.translatable("packrulemenus.warning.vanillapack.title"),
 			Component.translatable("packrulemenus.warning.vanillapack.message"),
 			Component.translatable("packrulemenus.warning.vanillapack.checkbox"),

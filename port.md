@@ -30,3 +30,7 @@ Current master
 ## 26.1
 - Minecraft now has its own in-world gamerule menu.
 - Minecraft now has a dedicated menu for in-world options.
+
+## 26.2
+- `MinecraftClient::setScreen` was renamed to `setScreenAndShow`
+- `MinecraftClient.gui.getChat()` is now nested in `.gui.hud.getChat()`

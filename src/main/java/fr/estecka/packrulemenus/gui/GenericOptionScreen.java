@@ -40,7 +40,7 @@ extends Screen
 
 	@Override
 	public void onClose(){
-		this.minecraft.setScreen(parent);
+		this.minecraft.setScreenAndShow(parent);
 		try {
 			PackRuleMod.CONFIG_IO.Write(PackRuleMod.CONFIG);
 		}
